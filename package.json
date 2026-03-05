@@ -1,0 +1,40 @@
+{
+  "name": "postgame",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "check-types": "turbo check-types",
+    "dev:native": "turbo -F native dev",
+    "dev:web": "turbo -F web dev",
+    "db:push": "turbo -F @postgame/db db:push",
+    "db:studio": "turbo -F @postgame/db db:studio",
+    "db:generate": "turbo -F @postgame/db db:generate",
+    "db:migrate": "turbo -F @postgame/db db:migrate",
+    "db:start": "turbo -F @postgame/db db:start",
+    "db:watch": "turbo -F @postgame/db db:watch",
+    "db:stop": "turbo -F @postgame/db db:stop",
+    "db:down": "turbo -F @postgame/db db:down",
+    "check": "oxlint && oxfmt --write"
+  },
+  "dependencies": {
+    "@postgame/env": "workspace:*",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@postgame/config": "workspace:*",
+    "@types/node": "catalog:",
+    "lefthook": "^2.0.13",
+    "oxfmt": "^0.26.0",
+    "oxlint": "^1.41.0",
+    "turbo": "^2.8.12",
+    "typescript": "catalog:"
+  },
+  "packageManager": "pnpm@10.28.2"
+}

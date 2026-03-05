@@ -1,0 +1,28 @@
+{
+  "name": "@postgame/api",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@orpc/client": "catalog:",
+    "@orpc/openapi": "catalog:",
+    "@orpc/server": "catalog:",
+    "@orpc/zod": "catalog:",
+    "@postgame/auth": "workspace:*",
+    "@postgame/db": "workspace:*",
+    "@postgame/env": "workspace:*",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@postgame/config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}
