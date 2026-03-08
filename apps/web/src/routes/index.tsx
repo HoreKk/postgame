@@ -151,7 +151,12 @@ function HomeComponent() {
                   />
                 </Flex>
               </Card.Header>
-              <Card.Body gap={2} borderTop="1px solid" borderColor="gray.200">
+              <Card.Body
+                gap={2}
+                borderTop="1px solid"
+                borderColor={{ base: "border.emphasized", _dark: "border.inverted" }}
+                py={4}
+              >
                 <Card.Title>{`${match.league.name} ${match.blockName}`}</Card.Title>
                 <Card.Description>
                   {match.match.teams[0].name} vs {match.match.teams[1].name}
