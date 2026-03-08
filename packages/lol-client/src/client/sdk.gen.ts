@@ -2,6 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
+import { getCompletedEventsResponseTransformer, getDetailsResponseTransformer, getLiveResponseTransformer, getScheduleResponseTransformer, getWindowResponseTransformer, highlanderTournamentsResponseTransformer, leaguesResponseTransformer, navItemsResponseTransformer, playersResponseTransformer, scheduleItemsResponseTransformer, teamsResponseTransformer, videosResponseTransformer } from './transformers.gen';
 import type { GetCompletedEventsData, GetCompletedEventsResponses, GetDetailsData, GetDetailsResponses, GetEventDetailsData, GetEventDetailsResponses, GetGamesData, GetGamesResponses, GetLeaguesData, GetLeaguesResponses, GetLiveData, GetLiveResponses, GetScheduleData, GetScheduleResponses, GetStandingsData, GetStandingsResponses, GetTeamsData, GetTeamsResponses, GetTournamentsForLeagueData, GetTournamentsForLeagueResponses, GetWindowData, GetWindowResponses, HighlanderTournamentsData, HighlanderTournamentsErrors, HighlanderTournamentsResponses, LeaguesData, LeaguesErrors, LeaguesResponses, NavItemsData, NavItemsResponses, PlayersData, PlayersResponses, ScheduleItemsData, ScheduleItemsResponses, TeamsData, TeamsResponses, VideosData, VideosResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
@@ -25,12 +26,14 @@ export const getLeagues = <ThrowOnError extends boolean = false>(options: Option
 });
 
 export const getSchedule = <ThrowOnError extends boolean = false>(options: Options<GetScheduleData, ThrowOnError>) => (options.client ?? client).get<GetScheduleResponses, unknown, ThrowOnError>({
+    responseTransformer: getScheduleResponseTransformer,
     security: [{ name: 'x-api-key', type: 'apiKey' }],
     url: '/getSchedule',
     ...options
 });
 
 export const getLive = <ThrowOnError extends boolean = false>(options: Options<GetLiveData, ThrowOnError>) => (options.client ?? client).get<GetLiveResponses, unknown, ThrowOnError>({
+    responseTransformer: getLiveResponseTransformer,
     security: [{ name: 'x-api-key', type: 'apiKey' }],
     url: '/getLive',
     ...options
@@ -49,6 +52,7 @@ export const getStandings = <ThrowOnError extends boolean = false>(options: Opti
 });
 
 export const getCompletedEvents = <ThrowOnError extends boolean = false>(options: Options<GetCompletedEventsData, ThrowOnError>) => (options.client ?? client).get<GetCompletedEventsResponses, unknown, ThrowOnError>({
+    responseTransformer: getCompletedEventsResponseTransformer,
     security: [{ name: 'x-api-key', type: 'apiKey' }],
     url: '/getCompletedEvents',
     ...options
@@ -72,11 +76,23 @@ export const getGames = <ThrowOnError extends boolean = false>(options: Options<
     ...options
 });
 
-export const getWindow = <ThrowOnError extends boolean = false>(options: Options<GetWindowData, ThrowOnError>) => (options.client ?? client).get<GetWindowResponses, unknown, ThrowOnError>({ url: '/window/{gameId}', ...options });
+export const getWindow = <ThrowOnError extends boolean = false>(options: Options<GetWindowData, ThrowOnError>) => (options.client ?? client).get<GetWindowResponses, unknown, ThrowOnError>({
+    responseTransformer: getWindowResponseTransformer,
+    url: '/window/{gameId}',
+    ...options
+});
 
-export const getDetails = <ThrowOnError extends boolean = false>(options: Options<GetDetailsData, ThrowOnError>) => (options.client ?? client).get<GetDetailsResponses, unknown, ThrowOnError>({ url: '/details/{gameId}', ...options });
+export const getDetails = <ThrowOnError extends boolean = false>(options: Options<GetDetailsData, ThrowOnError>) => (options.client ?? client).get<GetDetailsResponses, unknown, ThrowOnError>({
+    responseTransformer: getDetailsResponseTransformer,
+    url: '/details/{gameId}',
+    ...options
+});
 
-export const navItems = <ThrowOnError extends boolean = false>(options?: Options<NavItemsData, ThrowOnError>) => (options?.client ?? client).get<NavItemsResponses, unknown, ThrowOnError>({ url: '/navItems', ...options });
+export const navItems = <ThrowOnError extends boolean = false>(options?: Options<NavItemsData, ThrowOnError>) => (options?.client ?? client).get<NavItemsResponses, unknown, ThrowOnError>({
+    responseTransformer: navItemsResponseTransformer,
+    url: '/navItems',
+    ...options
+});
 
 /**
  * This endpoint returns details about esports vods on YouTube.
@@ -91,28 +107,52 @@ export const navItems = <ThrowOnError extends boolean = false>(options?: Options
  * It is highly advised that you cache the data from this endpoint.
  *
  */
-export const videos = <ThrowOnError extends boolean = false>(options?: Options<VideosData, ThrowOnError>) => (options?.client ?? client).get<VideosResponses, unknown, ThrowOnError>({ url: '/videos', ...options });
+export const videos = <ThrowOnError extends boolean = false>(options?: Options<VideosData, ThrowOnError>) => (options?.client ?? client).get<VideosResponses, unknown, ThrowOnError>({
+    responseTransformer: videosResponseTransformer,
+    url: '/videos',
+    ...options
+});
 
 /**
  * If a league does not have highlanderTournament objects, the API will return 404
  *
  */
-export const highlanderTournaments = <ThrowOnError extends boolean = false>(options: Options<HighlanderTournamentsData, ThrowOnError>) => (options.client ?? client).get<HighlanderTournamentsResponses, HighlanderTournamentsErrors, ThrowOnError>({ url: '/highlanderTournaments', ...options });
+export const highlanderTournaments = <ThrowOnError extends boolean = false>(options: Options<HighlanderTournamentsData, ThrowOnError>) => (options.client ?? client).get<HighlanderTournamentsResponses, HighlanderTournamentsErrors, ThrowOnError>({
+    responseTransformer: highlanderTournamentsResponseTransformer,
+    url: '/highlanderTournaments',
+    ...options
+});
 
-export const leagues = <ThrowOnError extends boolean = false>(options: Options<LeaguesData, ThrowOnError>) => (options.client ?? client).get<LeaguesResponses, LeaguesErrors, ThrowOnError>({ url: '/leagues', ...options });
+export const leagues = <ThrowOnError extends boolean = false>(options: Options<LeaguesData, ThrowOnError>) => (options.client ?? client).get<LeaguesResponses, LeaguesErrors, ThrowOnError>({
+    responseTransformer: leaguesResponseTransformer,
+    url: '/leagues',
+    ...options
+});
 
-export const scheduleItems = <ThrowOnError extends boolean = false>(options: Options<ScheduleItemsData, ThrowOnError>) => (options.client ?? client).get<ScheduleItemsResponses, unknown, ThrowOnError>({ url: '/scheduleItems', ...options });
+export const scheduleItems = <ThrowOnError extends boolean = false>(options: Options<ScheduleItemsData, ThrowOnError>) => (options.client ?? client).get<ScheduleItemsResponses, unknown, ThrowOnError>({
+    responseTransformer: scheduleItemsResponseTransformer,
+    url: '/scheduleItems',
+    ...options
+});
 
 /**
  * If the `teamStatsSummaries`, `teamRosterStats` and `teamStatsHistories` keys are not present,
  * then the team did not take part in that particular tournament.
  *
  */
-export const teams = <ThrowOnError extends boolean = false>(options: Options<TeamsData, ThrowOnError>) => (options.client ?? client).get<TeamsResponses, unknown, ThrowOnError>({ url: '/teams', ...options });
+export const teams = <ThrowOnError extends boolean = false>(options: Options<TeamsData, ThrowOnError>) => (options.client ?? client).get<TeamsResponses, unknown, ThrowOnError>({
+    responseTransformer: teamsResponseTransformer,
+    url: '/teams',
+    ...options
+});
 
 /**
  * If the `playerStatsSummaries` and `playerStatsHistories` keys are not present,
  * then the player did not take part in that particular tournament.
  *
  */
-export const players = <ThrowOnError extends boolean = false>(options: Options<PlayersData, ThrowOnError>) => (options.client ?? client).get<PlayersResponses, unknown, ThrowOnError>({ url: '/players', ...options });
+export const players = <ThrowOnError extends boolean = false>(options: Options<PlayersData, ThrowOnError>) => (options.client ?? client).get<PlayersResponses, unknown, ThrowOnError>({
+    responseTransformer: playersResponseTransformer,
+    url: '/players',
+    ...options
+});

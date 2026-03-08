@@ -7,10 +7,21 @@ export default defineConfig({
     postProcess: ["prettier", "eslint"],
   },
   plugins: [
-    "@hey-api/schemas",
+    {
+      bigInt: true,
+      name: "@hey-api/transformers",
+    },
+    {
+      name: "@hey-api/schemas",
+      type: "json",
+    },
     {
       enums: "javascript",
       name: "@hey-api/typescript",
+    },
+    {
+      name: "@hey-api/sdk",
+      transformer: true,
     },
     "@tanstack/react-query",
   ],

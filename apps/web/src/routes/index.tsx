@@ -1,8 +1,33 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { getLeagues, getSchedule } from "@postgame/lol-client";
-import { Image, Box, Card, Heading, Text, Flex, Grid, GridItem, Tag, Icon } from "@chakra-ui/react";
+import {
+  getLeagues,
+  getLive,
+  getSchedule,
+  type GetLeaguesResponses,
+  type GetScheduleResponses,
+  type Result,
+  type Outcome,
+  type Record as LolRecord,
+  type Team,
+} from "@postgame/lol-client";
+import { Box, Heading, Text, Flex, Grid, GridItem, Tag } from "@chakra-ui/react";
 import { useState } from "react";
-import { CalendarBlankIcon } from "@phosphor-icons/react";
+import { UpcomingMatchCard } from "@/components/cards/UpcomingMatchCard";
+
+// Custom types to work around missing/incorrect fields in the generated openapi spec
+type RawLeague = GetLeaguesResponses[200]["data"]["leagues"][number];
+export type League = RawLeague & {
+  displayPriority: { position: number; status: string };
+};
+
+type RawScheduleEvent = GetScheduleResponses[200]["data"]["schedule"]["events"][number];
+type ScheduleTeam = Team & {
+  record: LolRecord;
+  result: (Result & { outcome: Outcome | null }) | null;
+};
+export type ScheduleEvent = Omit<RawScheduleEvent, "match"> & {
+  match: Omit<RawScheduleEvent["match"], "teams"> & { teams: ScheduleTeam[] };
+};
 
 export const Route = createFileRoute("/")({
   component: HomeComponent,
@@ -10,36 +35,32 @@ export const Route = createFileRoute("/")({
     const { lolClient } = context;
 
     try {
-      const { data: leagues } = await getLeagues({
+      const { data: resultLeagues } = await getLeagues({
         client: lolClient,
         query: { hl: "en-US" },
       });
 
-      if (!leagues) throw new Error("Failed to fetch leagues");
+      if (!resultLeagues) throw new Error("Failed to fetch leagues");
 
-      const curatedLeagues = (leagues.data.leagues as any[]).filter(
-        (league) => league.displayPriority?.position < 4,
-      );
+      const leagues = resultLeagues.data.leagues as League[];
+
+      const curatedLeagues = leagues.filter((league) => league.displayPriority?.position < 3);
 
       if (!curatedLeagues) throw new Error("Failed to find leagues");
 
       const leagueId = curatedLeagues.map((league) => BigInt(league.id)) as unknown as number[];
 
-      async function fetchAllPages(
-        pageToken?: string,
-      ): Promise<
-        NonNullable<Awaited<ReturnType<typeof getSchedule>>["data"]>["data"]["schedule"]["events"]
-      > {
+      async function fetchAllPages(pageToken?: string): Promise<ScheduleEvent[]> {
         const { data } = await getSchedule({
           client: lolClient,
           query: {
             hl: "en-US",
-            leagueId: leagueId.join(",") as unknown as number[],
+            leagueId: leagueId.join(",") as unknown as bigint[],
             ...(pageToken && { pageToken }),
           },
         });
         if (!data) throw new Error("Failed to fetch schedule");
-        const events = data.data.schedule.events;
+        const events = data.data.schedule.events as unknown as ScheduleEvent[];
         if (data.data.schedule.pages.newer) {
           const nextEvents = await fetchAllPages(data.data.schedule.pages.newer);
           events.push(...nextEvents);
@@ -47,13 +68,36 @@ export const Route = createFileRoute("/")({
         return events;
       }
 
-      const events = await fetchAllPages();
+      let events = await fetchAllPages();
 
-      const upcomingMatches = events.filter(
-        (event) => event.state === "unstarted" || event.state === "inProgress",
-      );
+      const { data: liveSchedule } = await getLive({
+        client: lolClient,
+        query: { hl: "en-US" },
+      });
 
-      return { leagues: leagues.data.leagues, upcomingMatches };
+      const liveEvents = liveSchedule?.data?.schedule?.events as unknown as ScheduleEvent[];
+
+      if (liveEvents)
+        events.unshift(
+          ...liveEvents.filter(
+            (liveEvent) =>
+              !events.some((e) => e.match.id === liveEvent.match.id) &&
+              curatedLeagues.map((league) => league.slug).includes(liveEvent.league.slug),
+          ),
+        );
+
+      const upcomingMatches = events
+        .map((event) => ({
+          ...event,
+          state:
+            event.match.teams[0]?.result?.outcome === null &&
+            new Date(event.startTime) <= new Date()
+              ? "inProgress"
+              : event.state,
+        }))
+        .filter((event) => event.state === "unstarted" || event.state === "inProgress");
+
+      return { leagues, upcomingMatches };
     } catch (error) {
       throw new Error(error instanceof Error ? error.message : String(error));
     }
@@ -113,72 +157,7 @@ function HomeComponent() {
       >
         {filteredMatches.map((match) => (
           <GridItem key={match.match.id}>
-            <Card.Root
-              overflow="hidden"
-              h="full"
-              shadow="md"
-              _hover={{
-                shadow: "lg",
-                transform: "translateY(-1px)",
-                borderColor: "border.emphasized",
-              }}
-              transition="all 0.2s"
-            >
-              <Card.Header alignItems="center" py={12}>
-                <Flex position="absolute" top={4} justifyContent="space-between" w="full" px={4}>
-                  <Tag.Root size="sm">
-                    <Tag.Label>LoL</Tag.Label>
-                  </Tag.Root>
-                  <Tag.Root size="sm">
-                    <Tag.Label>{match.league.name}</Tag.Label>
-                  </Tag.Root>
-                </Flex>
-                <Flex alignItems="center" gap="4">
-                  <Image
-                    src={match.match.teams[0].image}
-                    alt={match.match.teams[0].name}
-                    boxSize="50px"
-                    objectFit="cover"
-                    borderRadius="full"
-                  />
-                  <Text>vs</Text>
-                  <Image
-                    src={match.match.teams[1].image}
-                    alt={match.match.teams[1].name}
-                    boxSize="50px"
-                    objectFit="cover"
-                    borderRadius="full"
-                  />
-                </Flex>
-              </Card.Header>
-              <Card.Body
-                gap={2}
-                borderTop="1px solid"
-                borderColor={{ base: "border.emphasized", _dark: "border.inverted" }}
-                py={4}
-              >
-                <Card.Title>{`${match.league.name} ${match.blockName}`}</Card.Title>
-                <Card.Description>
-                  {match.match.teams[0].name} vs {match.match.teams[1].name}
-                </Card.Description>
-              </Card.Body>
-              <Card.Footer justifyContent="end">
-                <Tag.Root size="sm">
-                  <Icon size="xs" mr={1} asChild>
-                    <CalendarBlankIcon />
-                  </Icon>
-                  <Tag.Label>
-                    {Intl.DateTimeFormat("en-US", {
-                      month: "long",
-                      day: "numeric",
-                      hour: "numeric",
-                      minute: "2-digit",
-                      hour12: true,
-                    }).format(new Date(match.startTime))}
-                  </Tag.Label>
-                </Tag.Root>
-              </Card.Footer>
-            </Card.Root>
+            <UpcomingMatchCard match={match} />
           </GridItem>
         ))}
       </Grid>

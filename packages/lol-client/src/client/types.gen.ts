@@ -56,11 +56,11 @@ export type HighlanderLeague = BaseLeague & {
     /**
      * The date and time when this entry was created.
      */
-    createdAt: string;
+    createdAt: Date;
     /**
      * The date and time when this entry was last updated.
      */
-    updatedAt: string;
+    updatedAt: Date;
     /**
      * Contains a description of the league translated in various languages.
      *
@@ -223,7 +223,7 @@ export type SimpleEvent = {
     /**
      * The time the match started
      */
-    startTime: string;
+    startTime: Date;
     blockName: string | null;
     match: SimpleMatch & {
         strategy: Strategy;
@@ -482,11 +482,11 @@ export const ParticipantId = {
 export type ParticipantId = typeof ParticipantId[keyof typeof ParticipantId];
 
 export type BaseFrame = {
-    rfc460Timestamp: string;
+    rfc460Timestamp: Date;
 };
 
 export type WindowFrame = BaseFrame & {
-    rfc460Timestamp: string;
+    rfc460Timestamp: Date;
     gameState: 'in_game' | 'finished';
     blueTeam: TeamStats;
     redTeam: TeamStats;
@@ -607,11 +607,11 @@ export type NavItem = {
     /**
      * The date and time when this entry was created.
      */
-    createdAt: string;
+    createdAt: Date;
     /**
      * The date and time when this entry was last updated.
      */
-    updatedAt: string;
+    updatedAt: Date;
 };
 
 export type Video = {
@@ -637,11 +637,11 @@ export type Video = {
     /**
      * The date and time when this entry was created.
      */
-    createdAt: string;
+    createdAt: Date;
     /**
      * The date and time when this entry was last updated.
      */
-    updatedAt: string;
+    updatedAt: Date;
     game: GameId;
 };
 
@@ -736,11 +736,11 @@ export type HighlanderTournament = {
     /**
      * The day the tournament starts/started.
      */
-    startDate: string;
+    startDate: Date;
     /**
      * The day the tournament ends/ended.
      */
-    endDate: string;
+    endDate: Date;
     /**
      * Contains all the platform IDs in for this tournaments.
      *
@@ -827,7 +827,7 @@ export type Standings = {
     /**
      * Unix timestamp in milliseconds of when the match started.
      */
-    timestamp: number;
+    timestamp: bigint;
     /**
      * How the record was created/updated.
      */
@@ -1094,11 +1094,11 @@ export type HighlanderTeam = {
     /**
      * The date and time when this entry was created.
      */
-    createdAt: string;
+    createdAt: Date;
     /**
      * The date and time when this entry was last updated.
      */
-    updatedAt: string;
+    updatedAt: Date;
     /**
      * Contains a description of the team translated to various languages.
      *
@@ -1158,15 +1158,15 @@ export type HighlanderPlayer = {
     photoUrl: string | null;
     hometown: string | null;
     region: string;
-    birthdate: string | null;
+    birthdate: Date | null;
     /**
      * The date and time when this entry was created.
      */
-    createdAt: string;
+    createdAt: Date;
     /**
      * The date and time when this entry was last updated.
      */
-    updatedAt: string;
+    updatedAt: Date;
     /**
      * Contains a description of the player translated to various languages.
      *
@@ -1215,11 +1215,11 @@ export type HighlanderPlayer = {
         /**
          * The date and time when this entry was created.
          */
-        createdAt: string;
+        createdAt: Date;
         /**
          * The date and time when this entry was last updated.
          */
-        updatedAt: string;
+        updatedAt: Date;
     }>;
 };
 
@@ -1239,7 +1239,7 @@ export type BaseScheduleItem = {
     /**
      * The time the match/event is/was scheduled to start.
      */
-    scheduledTime: string;
+    scheduledTime: Date;
     tags: Tags;
     /**
      * The tournament ID
@@ -1305,13 +1305,13 @@ export type Hl = Locale;
  * The id(s) of the league(s) you want details of
  *
  */
-export type LeagueIds = Array<number>;
+export type LeagueIds = Array<bigint>;
 
 /**
  * The id of the league you want details of
  *
  */
-export type LeagueId = number;
+export type LeagueId = bigint;
 
 /**
  * The id of the league you want details of
@@ -1329,13 +1329,13 @@ export type PageToken2 = string;
  * The id(s) of the tournament(s) you want details ofs
  *
  */
-export type TournamentIds = Array<number>;
+export type TournamentIds = Array<bigint>;
 
 /**
  * The id of the match that you want
  *
  */
-export type Id = number;
+export type Id = bigint;
 
 /**
  * The team slug(s).
@@ -1351,19 +1351,19 @@ export type TeamSlugs = Array<string>;
  * You can input more than one game Id(s).
  *
  */
-export type GameIds = Array<number>;
+export type GameIds = Array<bigint>;
 
 /**
  * The game id of the match
  *
  */
-export type PathGameId = number;
+export type PathGameId = bigint;
 
 /**
  * The date-time (RFC3339)
  *
  */
-export type StartingTime = string;
+export type StartingTime = Date;
 
 /**
  * The id of the league you want details of
@@ -1424,7 +1424,7 @@ export type GetScheduleData = {
          * The id(s) of the league(s) you want details of
          *
          */
-        leagueId?: Array<number>;
+        leagueId?: Array<bigint>;
         /**
          * Base 64 encoded string used to determine the
          * next "page" of data to pull
@@ -1445,7 +1445,7 @@ export type GetScheduleResponses = {
                 /**
                  * The time the data presented was last updated
                  */
-                updated: string;
+                updated: Date;
                 pages: {
                     older: PageToken;
                     newer: PageToken;
@@ -1521,7 +1521,7 @@ export type GetTournamentsForLeagueData = {
          * The id of the league you want details of
          *
          */
-        leagueId?: number;
+        leagueId?: bigint;
     };
     url: '/getTournamentsForLeague';
 };
@@ -1560,7 +1560,7 @@ export type GetStandingsData = {
          * The id(s) of the tournament(s) you want details ofs
          *
          */
-        tournamentId?: Array<number>;
+        tournamentId?: Array<bigint>;
     };
     url: '/getStandings';
 };
@@ -1593,7 +1593,7 @@ export type GetCompletedEventsData = {
          * The id(s) of the tournament(s) you want details ofs
          *
          */
-        tournamentId?: Array<number>;
+        tournamentId?: Array<bigint>;
     };
     url: '/getCompletedEvents';
 };
@@ -1627,7 +1627,7 @@ export type GetEventDetailsData = {
          * The id of the match that you want
          *
          */
-        id: number;
+        id: bigint;
     };
     url: '/getEventDetails';
 };
@@ -1711,7 +1711,7 @@ export type GetGamesData = {
          * You can input more than one game Id(s).
          *
          */
-        id?: Array<number>;
+        id?: Array<bigint>;
     };
     url: '/getGames';
 };
@@ -1736,14 +1736,14 @@ export type GetWindowData = {
          * The game id of the match
          *
          */
-        gameId: number;
+        gameId: bigint;
     };
     query?: {
         /**
          * The date-time (RFC3339)
          *
          */
-        startingTime?: string;
+        startingTime?: Date;
     };
     url: '/window/{gameId}';
 };
@@ -1764,14 +1764,14 @@ export type GetDetailsData = {
          * The game id of the match
          *
          */
-        gameId: number;
+        gameId: bigint;
     };
     query?: {
         /**
          * The date-time (RFC3339)
          *
          */
-        startingTime?: string;
+        startingTime?: Date;
         /**
          * A list of the participant Ids separated by underscores and not commas
          *
@@ -2094,7 +2094,7 @@ export type TeamsResponses = {
             /**
              * Unix timestamp in milliseconds of when the match started.
              */
-            timestamp: number;
+            timestamp: bigint;
             assists: number;
             kills: number;
             win: true | false;
@@ -2262,7 +2262,7 @@ export type PlayersResponses = {
             /**
              * Unix timestamp in milliseconds of when the match started.
              */
-            timestamp: number;
+            timestamp: bigint;
             assists: number;
             deaths: number;
             kills: number;
