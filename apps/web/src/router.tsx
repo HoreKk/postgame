@@ -8,6 +8,7 @@ import { lolClient } from "./utils/lol-client";
 export const getRouter = () => {
   const router = createTanStackRouter({
     routeTree,
+    defaultViewTransition: true,
     scrollRestoration: true,
     defaultPreloadStaleTime: 0,
     context: { orpc, queryClient, lolClient },

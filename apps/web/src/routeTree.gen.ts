@@ -11,6 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ListsRouteImport } from './routes/lists'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as EventsUpcomingRouteImport } from './routes/events/upcoming'
+import { Route as EventsPastRouteImport } from './routes/events/past'
+import { Route as EventsIdRouteImport } from './routes/events/$id'
 import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
@@ -22,6 +25,21 @@ const ListsRoute = ListsRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsUpcomingRoute = EventsUpcomingRouteImport.update({
+  id: '/events/upcoming',
+  path: '/events/upcoming',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsPastRoute = EventsPastRouteImport.update({
+  id: '/events/past',
+  path: '/events/past',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsIdRoute = EventsIdRouteImport.update({
+  id: '/events/$id',
+  path: '/events/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
@@ -38,12 +56,18 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/lists': typeof ListsRoute
+  '/events/$id': typeof EventsIdRoute
+  '/events/past': typeof EventsPastRoute
+  '/events/upcoming': typeof EventsUpcomingRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/lists': typeof ListsRoute
+  '/events/$id': typeof EventsIdRoute
+  '/events/past': typeof EventsPastRoute
+  '/events/upcoming': typeof EventsUpcomingRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
 }
@@ -51,20 +75,48 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/lists': typeof ListsRoute
+  '/events/$id': typeof EventsIdRoute
+  '/events/past': typeof EventsPastRoute
+  '/events/upcoming': typeof EventsUpcomingRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/lists' | '/api/auth/$' | '/api/rpc/$'
+  fullPaths:
+    | '/'
+    | '/lists'
+    | '/events/$id'
+    | '/events/past'
+    | '/events/upcoming'
+    | '/api/auth/$'
+    | '/api/rpc/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/lists' | '/api/auth/$' | '/api/rpc/$'
-  id: '__root__' | '/' | '/lists' | '/api/auth/$' | '/api/rpc/$'
+  to:
+    | '/'
+    | '/lists'
+    | '/events/$id'
+    | '/events/past'
+    | '/events/upcoming'
+    | '/api/auth/$'
+    | '/api/rpc/$'
+  id:
+    | '__root__'
+    | '/'
+    | '/lists'
+    | '/events/$id'
+    | '/events/past'
+    | '/events/upcoming'
+    | '/api/auth/$'
+    | '/api/rpc/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ListsRoute: typeof ListsRoute
+  EventsIdRoute: typeof EventsIdRoute
+  EventsPastRoute: typeof EventsPastRoute
+  EventsUpcomingRoute: typeof EventsUpcomingRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
 }
@@ -83,6 +135,27 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events/upcoming': {
+      id: '/events/upcoming'
+      path: '/events/upcoming'
+      fullPath: '/events/upcoming'
+      preLoaderRoute: typeof EventsUpcomingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events/past': {
+      id: '/events/past'
+      path: '/events/past'
+      fullPath: '/events/past'
+      preLoaderRoute: typeof EventsPastRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events/$id': {
+      id: '/events/$id'
+      path: '/events/$id'
+      fullPath: '/events/$id'
+      preLoaderRoute: typeof EventsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/rpc/$': {
@@ -105,6 +178,9 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ListsRoute: ListsRoute,
+  EventsIdRoute: EventsIdRoute,
+  EventsPastRoute: EventsPastRoute,
+  EventsUpcomingRoute: EventsUpcomingRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,
 }

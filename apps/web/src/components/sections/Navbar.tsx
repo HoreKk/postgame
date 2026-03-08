@@ -10,35 +10,42 @@ import {
 } from "@chakra-ui/react";
 import { ColorModeButton } from "../ui/color-mode";
 import { FlagBannerFoldIcon } from "@phosphor-icons/react";
-import { Link, type LinkOptions } from "@tanstack/react-router";
+import { Link, useLocation, type LinkOptions } from "@tanstack/react-router";
 
 type NavLinkProps = {
   to: LinkOptions["to"];
+  startWith?: string;
   children: React.ReactNode;
 };
 
-const NavLink = ({ to, children }: NavLinkProps) => {
+const NavLink = ({ to, children, startWith }: NavLinkProps) => {
+  const location = useLocation();
   return (
     <Link key={`${to}-${children?.toString()}`} to={to}>
-      {({ isActive }) => (
-        <Flex direction="column" align="center" gap={0.5}>
-          <ChakraLink
-            outline="none"
-            _hover={{ textDecor: "none" }}
-            fontWeight={isActive ? "bold" : "medium"}
-            pt={0.5}
-            asChild
-          >
-            <span>{children}</span>
-          </ChakraLink>
-          <Box
-            w="95%"
-            h="1.5px"
-            transition="background-color 0.2s"
-            bgColor={isActive ? "primary.solid" : "transparent"}
-          />
-        </Flex>
-      )}
+      {({ isActive }) => {
+        if (startWith && !isActive) {
+          isActive = location.pathname.startsWith(startWith);
+        }
+        return (
+          <Flex direction="column" align="center" gap={0.5}>
+            <ChakraLink
+              outline="none"
+              _hover={{ textDecor: "none" }}
+              fontWeight={isActive ? "bold" : "medium"}
+              pt={0.5}
+              asChild
+            >
+              <span>{children}</span>
+            </ChakraLink>
+            <Box
+              w="95%"
+              h="1.5px"
+              transition="background-color 0.2s"
+              bgColor={isActive ? "primary.solid" : "transparent"}
+            />
+          </Flex>
+        );
+      }}
     </Link>
   );
 };
@@ -70,7 +77,9 @@ const Navbar = () => {
           </Link>
           <AbsoluteCenter>
             <Flex align="center" gap={5}>
-              <NavLink to="/">Home</NavLink>
+              <NavLink to="/" startWith="/events">
+                Matches
+              </NavLink>
               <NavLink to="/lists">Lists</NavLink>
             </Flex>
           </AbsoluteCenter>

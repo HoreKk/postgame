@@ -45,7 +45,7 @@ function RootDocument() {
       <body>
         <Provider>
           <Navbar />
-          <Container maxW="container.lg" py={6}>
+          <Container maxW="container.lg" py={8}>
             <Outlet />
           </Container>
           <TanStackDevtools
