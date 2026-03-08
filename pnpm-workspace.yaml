@@ -11,3 +11,4 @@ catalog:
   "@orpc/openapi": ^1.12.2
   "@orpc/zod": ^1.12.2
   better-auth: 1.5.2
+  tsdown: "^0"
