@@ -20,6 +20,7 @@
     "@postgame/api": "workspace:*",
     "@postgame/auth": "workspace:*",
     "@postgame/env": "workspace:*",
+    "@postgame/lol-client": "workspace:*",
     "@tanstack/react-devtools": "^0.9.10",
     "@tanstack/react-form": "^1.28.0",
     "@tanstack/react-query": "^5.80.6",
@@ -39,6 +40,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@hey-api/openapi-ts": "0.94.0",
     "@postgame/config": "workspace:*",
     "@tanstack/devtools-vite": "^0.5.3",
     "@tanstack/react-query-devtools": "^5.91.1",

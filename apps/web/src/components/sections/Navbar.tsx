@@ -48,9 +48,9 @@ const Navbar = () => {
     <Flex
       position="sticky"
       top={0}
+      zIndex={10}
       borderBottomWidth="1px"
-      bgColor="bg.panel"
-      borderColor="secondary.bg"
+      bgColor="bg.panel/translucent"
       backdropFilter="blur(8px)"
     >
       <Container py={4.5}>

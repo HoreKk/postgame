@@ -1,0 +1,20 @@
+{
+  "name": "@postgame/lol-client",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./src/client/index.ts",
+      "require": "./src/client/index.ts"
+    },
+    "./client": {
+      "import": "./src/client/client/index.ts",
+      "require": "./src/client/client/index.ts"
+    }
+  },
+  "scripts": {
+    "openapi-ts": "openapi-ts"
+  },
+  "devDependencies": {
+    "@hey-api/openapi-ts": "0.94.0"
+  }
+}

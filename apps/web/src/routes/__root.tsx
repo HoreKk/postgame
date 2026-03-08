@@ -7,13 +7,15 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import type { orpc } from "@/utils/orpc";
 import { Provider } from "@/components/ui/provider";
-import Navbar from "@/components/standard/Navbar";
+import Navbar from "@/components/sections/Navbar";
 import { Container } from "@chakra-ui/react";
 import "@fontsource-variable/jetbrains-mono/index.css";
+import type { Client } from "@postgame/lol-client/client";
 
 export interface RouterAppContext {
   orpc: typeof orpc;
   queryClient: QueryClient;
+  lolClient: Client;
 }
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({
