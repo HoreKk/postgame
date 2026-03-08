@@ -19,7 +19,8 @@
     }
   },
   "scripts": {
-    "build": "tsdown"
+    "build": "tsdown",
+    "start": "node dist/index.js"
   },
   "dependencies": {
     "@orpc/client": "catalog:",
