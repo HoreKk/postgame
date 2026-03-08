@@ -2,11 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import EventCard from "@/components/cards/EventCard";
 import { Box, Heading, Flex, Tag, Grid, GridItem, Text } from "@chakra-ui/react";
-import { getEvents } from "@/functions/get-events";
+import { client } from "@/utils/orpc";
 
 export const Route = createFileRoute("/events/past")({
   component: RouteComponent,
-  loader: () => getEvents({ data: { type: "past" } }),
+  loader: () => client.events.getEvents({ type: "past" }),
 });
 
 function RouteComponent() {

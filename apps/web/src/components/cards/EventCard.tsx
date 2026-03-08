@@ -1,4 +1,4 @@
-import type { ScheduleEvent } from "@/functions/get-events";
+import type { ScheduleEvent } from "@postgame/api/routers/events";
 import { MatchHero } from "@/components/MatchHero";
 import { Card, Tag, Icon } from "@chakra-ui/react";
 import { CalendarBlankIcon } from "@phosphor-icons/react";

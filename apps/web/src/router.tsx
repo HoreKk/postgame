@@ -3,7 +3,6 @@ import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import { orpc, queryClient } from "./utils/orpc";
 import DefaultError from "./components/sections/DefaultError";
-import { lolClient } from "./utils/lol-client";
 
 export const getRouter = () => {
   const router = createTanStackRouter({
@@ -11,7 +10,7 @@ export const getRouter = () => {
     defaultViewTransition: true,
     scrollRestoration: true,
     defaultPreloadStaleTime: 0,
-    context: { orpc, queryClient, lolClient },
+    context: { orpc, queryClient },
     defaultPendingComponent: () => <div>Loading...</div>,
     defaultNotFoundComponent: () => <div>Not Found</div>,
     defaultErrorComponent: ({ error }) => (

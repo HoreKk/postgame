@@ -10,15 +10,15 @@ import {
   Link as ChakraLink,
 } from "@chakra-ui/react";
 import EventCard from "@/components/cards/EventCard";
-import { getEvents } from "@/functions/get-events";
+import { client } from "@/utils/orpc";
 import { ArrowRightIcon } from "@phosphor-icons/react";
 
 export const Route = createFileRoute("/")({
   component: HomeComponent,
   loader: async () => {
     const [{ events: upcomingEvents }, { events: pastEvents }] = await Promise.all([
-      getEvents({ data: { type: "upcoming", limit: 3 } }),
-      getEvents({ data: { type: "past", limit: 3 } }),
+      client.events.getEvents({ type: "upcoming", limit: 3 }),
+      client.events.getEvents({ type: "past", limit: 3 }),
     ]);
 
     return { upcomingEvents, pastEvents };

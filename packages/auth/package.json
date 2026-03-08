@@ -12,7 +12,6 @@
   "scripts": {},
   "dependencies": {
     "@postgame/db": "workspace:*",
-    "@postgame/env": "workspace:*",
     "better-auth": "catalog:",
     "dotenv": "catalog:",
     "zod": "catalog:"

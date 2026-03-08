@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { getEvents } from "@/functions/get-events";
+import { client } from "@/utils/orpc";
 import { useMemo, useState } from "react";
 import EventCard from "@/components/cards/EventCard";
 import { Box, Heading, Flex, Tag, Grid, GridItem, Text } from "@chakra-ui/react";
 
 export const Route = createFileRoute("/events/upcoming")({
   component: RouteComponent,
-  loader: () => getEvents({ data: { type: "upcoming" } }),
+  loader: () => client.events.getEvents({ type: "upcoming" }),
 });
 
 function RouteComponent() {

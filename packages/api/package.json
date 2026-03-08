@@ -7,6 +7,9 @@
     },
     "./*": {
       "default": "./src/*.ts"
+    },
+    "./routers/*": {
+      "default": "./src/routers/*.ts"
     }
   },
   "scripts": {},
@@ -15,9 +18,10 @@
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
     "@orpc/zod": "catalog:",
+    "@postgame/lol-client": "workspace:*",
     "@postgame/auth": "workspace:*",
     "@postgame/db": "workspace:*",
-    "@postgame/env": "workspace:*",
+    "colorthief": "^3.3.1",
     "dotenv": "catalog:",
     "zod": "catalog:"
   },
