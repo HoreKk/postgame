@@ -8,5 +8,6 @@ export default defineConfig({
   plugins: [tanstackStart(), nitro(), tsconfigPaths(), viteReact()],
   server: {
     port: 3000,
+    allowedHosts: [process.env.CORS_ORIGIN!],
   },
 });
