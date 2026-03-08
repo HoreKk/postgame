@@ -47,7 +47,7 @@ export function UpcomingMatchCard({ match }: UpcomingMatchCardProps) {
           <Tag.Root size="sm" colorPalette="primary">
             <Tag.Label>LoL</Tag.Label>
           </Tag.Root>
-          <Status.Root colorPalette={matchState.color}>
+          <Status.Root colorPalette={matchState.color} size="lg">
             <Text fontSize="xs" opacity={0} _groupHover={{ opacity: 1 }} transition="opacity 0.2s">
               {matchState.text}
             </Text>

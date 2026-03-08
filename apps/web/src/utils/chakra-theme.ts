@@ -9,15 +9,15 @@ const config = defineConfig({
       },
       colors: {
         brand: {
-          100: { value: "#fcecc9" },
-          200: { value: "#fad78d" },
-          300: { value: "#f7bd52" },
-          400: { value: "#f49f1e" },
-          500: { value: "#ee8212" },
-          600: { value: "#d35f0c" },
-          700: { value: "#af410e" },
-          800: { value: "#8e3212" },
-          900: { value: "#752a12" },
+          100: { value: "#ffdfdf" },
+          200: { value: "#ffc5c5" },
+          300: { value: "#ff9d9d" },
+          400: { value: "#ff6464" },
+          500: { value: "#ff4d4d" },
+          600: { value: "#ed1515" },
+          700: { value: "#c80d0d" },
+          800: { value: "#a50f0f" },
+          900: { value: "#881414" },
         },
         stone: {
           50: { value: "#ffffff" },
@@ -48,13 +48,13 @@ const config = defineConfig({
         },
         primary: {
           solid: {
-            value: { base: "{colors.brand.500}", _dark: "{colors.brand.600}" },
+            value: { base: "{colors.brand.500}", _dark: "{colors.brand.500}" },
           },
           contrast: {
-            value: { base: "{colors.brand.100}", _dark: "{colors.brand.900}" },
+            value: { base: "{colors.brand.100}", _dark: "{colors.brand.100}" },
           },
           fg: {
-            value: { base: "{colors.brand.700}", _dark: "{colors.brand.300}" },
+            value: { base: "{colors.brand.700}", _dark: "{colors.brand.200}" },
           },
           muted: {
             value: { base: "{colors.brand.100}", _dark: "{colors.brand.900}" },

@@ -75,7 +75,7 @@ const Navbar = () => {
             </Flex>
           </AbsoluteCenter>
           <Flex>
-            <ColorModeButton />
+            <ColorModeButton colorPalette="primary" />
           </Flex>
         </Flex>
       </Container>

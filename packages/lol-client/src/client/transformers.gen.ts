@@ -149,7 +149,7 @@ const highlanderPlayersSchemaResponseTransformer = (data: any) => {
 };
 
 export const leaguesResponseTransformer = async (data: any): Promise<LeaguesResponse> => {
-    return highlanderLeagueSchemaResponseTransformer(item);
+    // return highlanderLeagueSchemaResponseTransformer(item);
     if (data.highlanderTournaments) {
         data.highlanderTournaments = highlanderTournamentsSchemaResponseTransformer(data.highlanderTournaments);
     }
@@ -199,7 +199,7 @@ const matchScheduleItemSchemaResponseTransformer = (data: any) => {
 };
 
 export const playersResponseTransformer = async (data: any): Promise<PlayersResponse> => {
-    return highlanderPlayerSchemaResponseTransformer(item);
+    // return highlanderPlayerSchemaResponseTransformer(item);
     data.highlanderTournaments = data.highlanderTournaments.map((item: any) => highlanderTournamentSchemaResponseTransformer(item));
     data.scheduleItems = data.scheduleItems.map((item: any) => matchScheduleItemSchemaResponseTransformer(item));
     data.teams = data.teams.map((item: any) => highlanderTeamSchemaResponseTransformer(item));

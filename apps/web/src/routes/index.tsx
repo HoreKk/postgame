@@ -79,10 +79,8 @@ export const Route = createFileRoute("/")({
 
       if (liveEvents)
         events.unshift(
-          ...liveEvents.filter(
-            (liveEvent) =>
-              !events.some((e) => e.match.id === liveEvent.match.id) &&
-              curatedLeagues.map((league) => league.slug).includes(liveEvent.league.slug),
+          ...liveEvents.filter((liveEvent) =>
+            curatedLeagues.map((league) => league.slug).includes(liveEvent.league.slug),
           ),
         );
 
@@ -99,6 +97,7 @@ export const Route = createFileRoute("/")({
 
       return { leagues, upcomingMatches };
     } catch (error) {
+      console.error("Error in loader:", error);
       throw new Error(error instanceof Error ? error.message : String(error));
     }
   },
