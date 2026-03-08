@@ -102,6 +102,10 @@ export const getEvents = createServerFn()
         .sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());
     }
 
+    if (limit) {
+      filteredEvents = filteredEvents.slice(0, limit);
+    }
+
     const uniqueImageUrls = [
       ...new Set(
         filteredEvents.flatMap((event) =>
@@ -132,10 +136,6 @@ export const getEvents = createServerFn()
         })),
       },
     }));
-
-    if (limit) {
-      result = result.slice(0, limit);
-    }
 
     return { leagues, events: result };
   });
