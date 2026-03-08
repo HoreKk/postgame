@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
 import {
   getLeagues,
   getLive,
@@ -13,6 +14,15 @@ import {
 import { Box, Heading, Text, Flex, Grid, GridItem, Tag } from "@chakra-ui/react";
 import { useState } from "react";
 import { UpcomingMatchCard } from "@/components/cards/UpcomingMatchCard";
+import { getColor } from "colorthief";
+import system from "@/utils/chakra-theme";
+import { lolClient } from "@/utils/lol-client";
+
+async function getDominantColor(url: string): Promise<string | null> {
+  const response = await fetch(url);
+  const buffer = Buffer.from(await response.arrayBuffer());
+  return (await getColor(buffer).catch(() => null))?.hex() ?? null;
+}
 
 // Custom types to work around missing/incorrect fields in the generated openapi spec
 type RawLeague = GetLeaguesResponses[200]["data"]["leagues"][number];
@@ -26,81 +36,102 @@ type ScheduleTeam = Team & {
   result: (Result & { outcome: Outcome | null }) | null;
 };
 export type ScheduleEvent = Omit<RawScheduleEvent, "match"> & {
-  match: Omit<RawScheduleEvent["match"], "teams"> & { teams: ScheduleTeam[] };
+  match: Omit<RawScheduleEvent["match"], "teams"> & { teams: (ScheduleTeam & { color: string })[] };
 };
+
+const getHomeData = createServerFn().handler(async () => {
+  const { data: resultLeagues } = await getLeagues({
+    client: lolClient,
+    query: { hl: "en-US" },
+  });
+
+  if (!resultLeagues) throw new Error("Failed to fetch leagues");
+
+  const leagues = resultLeagues.data.leagues as League[];
+
+  const curatedLeagues = leagues.filter((league) => league.displayPriority?.position < 3);
+
+  const leagueId = curatedLeagues.map((league) => league.id);
+
+  async function fetchAllPages(pageToken?: string): Promise<ScheduleEvent[]> {
+    const { data } = await getSchedule({
+      client: lolClient,
+      query: {
+        hl: "en-US",
+        leagueId: leagueId.join(",") as unknown as bigint[],
+        ...(pageToken && { pageToken }),
+      },
+    });
+    if (!data) throw new Error("Failed to fetch schedule");
+    const events = data.data.schedule.events as unknown as ScheduleEvent[];
+    if (data.data.schedule.pages.newer) {
+      const nextEvents = await fetchAllPages(data.data.schedule.pages.newer);
+      events.push(...nextEvents);
+    }
+    return events;
+  }
+
+  let events = await fetchAllPages();
+
+  const { data: liveSchedule } = await getLive({
+    client: lolClient,
+    query: { hl: "en-US" },
+  });
+
+  const liveEvents = liveSchedule?.data?.schedule?.events as unknown as ScheduleEvent[];
+
+  if (liveEvents) {
+    const curatedLeagueSlugs = new Set(curatedLeagues.map((league) => league.slug));
+    events.unshift(...liveEvents.filter((liveEvent) => curatedLeagueSlugs.has(liveEvent.league.slug)));
+  }
+
+  const filteredEvents = events
+    .map((event) => ({
+      ...event,
+      state:
+        event.match.teams[0]?.result?.outcome === null && new Date(event.startTime) <= new Date()
+          ? "inProgress"
+          : event.state,
+    }))
+    .filter((event) => event.state === "unstarted" || event.state === "inProgress");
+
+  const uniqueImageUrls = [
+    ...new Set(
+      filteredEvents.flatMap((event) =>
+        event.match.teams.filter((team) => team.code !== "TBD").map((team) => team.image),
+      ),
+    ),
+  ];
+
+  const colorCache = new Map(
+    await Promise.all(
+      uniqueImageUrls.map(async (url) => {
+        const color = (await getDominantColor(url)) ?? system.token("colors.gray.500");
+        return [url, color] as const;
+      }),
+    ),
+  );
+
+  const upcomingMatches = filteredEvents.map((event) => ({
+    ...event,
+    match: {
+      ...event.match,
+      teams: event.match.teams.map((team) => ({
+        ...team,
+        color:
+          team.code !== "TBD"
+            ? (colorCache.get(team.image) ?? system.token("colors.gray.500"))
+            : system.token("colors.gray.500"),
+      })),
+    },
+  }));
+
+  return { leagues, upcomingMatches };
+});
 
 export const Route = createFileRoute("/")({
   component: HomeComponent,
-  loader: async ({ context }) => {
-    const { lolClient } = context;
-
-    try {
-      const { data: resultLeagues } = await getLeagues({
-        client: lolClient,
-        query: { hl: "en-US" },
-      });
-
-      if (!resultLeagues) throw new Error("Failed to fetch leagues");
-
-      const leagues = resultLeagues.data.leagues as League[];
-
-      const curatedLeagues = leagues.filter((league) => league.displayPriority?.position < 3);
-
-      if (!curatedLeagues) throw new Error("Failed to find leagues");
-
-      const leagueId = curatedLeagues.map((league) => BigInt(league.id)) as unknown as number[];
-
-      async function fetchAllPages(pageToken?: string): Promise<ScheduleEvent[]> {
-        const { data } = await getSchedule({
-          client: lolClient,
-          query: {
-            hl: "en-US",
-            leagueId: leagueId.join(",") as unknown as bigint[],
-            ...(pageToken && { pageToken }),
-          },
-        });
-        if (!data) throw new Error("Failed to fetch schedule");
-        const events = data.data.schedule.events as unknown as ScheduleEvent[];
-        if (data.data.schedule.pages.newer) {
-          const nextEvents = await fetchAllPages(data.data.schedule.pages.newer);
-          events.push(...nextEvents);
-        }
-        return events;
-      }
-
-      let events = await fetchAllPages();
-
-      const { data: liveSchedule } = await getLive({
-        client: lolClient,
-        query: { hl: "en-US" },
-      });
-
-      const liveEvents = liveSchedule?.data?.schedule?.events as unknown as ScheduleEvent[];
-
-      if (liveEvents)
-        events.unshift(
-          ...liveEvents.filter((liveEvent) =>
-            curatedLeagues.map((league) => league.slug).includes(liveEvent.league.slug),
-          ),
-        );
-
-      const upcomingMatches = events
-        .map((event) => ({
-          ...event,
-          state:
-            event.match.teams[0]?.result?.outcome === null &&
-            new Date(event.startTime) <= new Date()
-              ? "inProgress"
-              : event.state,
-        }))
-        .filter((event) => event.state === "unstarted" || event.state === "inProgress");
-
-      return { leagues, upcomingMatches };
-    } catch (error) {
-      console.error("Error in loader:", error);
-      throw new Error(error instanceof Error ? error.message : String(error));
-    }
-  },
+  loader: () => getHomeData(),
 });
 
 function HomeComponent() {

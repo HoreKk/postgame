@@ -29,6 +29,9 @@ export function UpcomingMatchCard({ match }: UpcomingMatchCardProps) {
         ? { text: "Live", color: "green" }
         : { text: "Finished", color: "red" };
 
+  const team1Color = match.match.teams[0].color;
+  const team2Color = match.match.teams[1].color;
+
   return (
     <Card.Root
       overflow="hidden"
@@ -42,9 +45,16 @@ export function UpcomingMatchCard({ match }: UpcomingMatchCardProps) {
       }}
       transition="all 0.2s"
     >
-      <Card.Header alignItems="center" py={12} position="relative">
+      <Card.Header
+        alignItems="center"
+        py={12}
+        position="relative"
+        style={{
+          background: `linear-gradient(135deg, ${team1Color}99 0%, ${team1Color}00 65%), linear-gradient(315deg, ${team2Color}99 0%, ${team2Color}00 65%)`,
+        }}
+      >
         <Flex position="absolute" top={4} justifyContent="space-between" w="full" px={4}>
-          <Tag.Root size="sm" colorPalette="primary">
+          <Tag.Root size="sm">
             <Tag.Label>LoL</Tag.Label>
           </Tag.Root>
           <Status.Root colorPalette={matchState.color} size="lg">
