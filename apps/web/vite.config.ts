@@ -7,7 +7,7 @@ import { nitro } from "nitro/vite";
 export default defineConfig({
   plugins: [tanstackStart(), nitro(), tsconfigPaths(), viteReact()],
   server: {
-    port: 3000,
+    port: Number(process.env.PORT) || 3000,
     allowedHosts: true,
   },
 });
