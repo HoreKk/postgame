@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { getLeagues, getSchedule } from "@postgame/lol-client";
-import { Image, Box, Card, Heading, Text, Flex, Grid, GridItem, Tag } from "@chakra-ui/react";
+import { Image, Box, Card, Heading, Text, Flex, Grid, GridItem, Tag, Icon } from "@chakra-ui/react";
 import { useState } from "react";
+import { CalendarBlankIcon } from "@phosphor-icons/react";
 
 export const Route = createFileRoute("/")({
   component: HomeComponent,
@@ -96,11 +97,11 @@ function HomeComponent() {
           </Tag.Root>
         ))}
       </Flex>
-      <Grid templateColumns="repeat(3, minmax(300px, 1fr))" gap={4} mt={4}>
+      <Grid templateColumns="repeat(3, minmax(300px, 1fr))" gap={6} mt={4}>
         {filteredMatches.map((match) => (
           <GridItem key={match.match.id}>
             <Card.Root overflow="hidden" h="full">
-              <Card.Header alignItems="center">
+              <Card.Header alignItems="center" py={12}>
                 <Flex alignItems="center" gap="4">
                   <Image
                     src={match.match.teams[0].image}
@@ -119,21 +120,28 @@ function HomeComponent() {
                   />
                 </Flex>
               </Card.Header>
-              <Card.Body gap="2">
-                <Card.Title>
-                  {match.match.teams[0].name} vs {match.match.teams[1].name}
-                </Card.Title>
+              <Card.Body gap={2} borderTop="1px solid" borderColor="gray.200">
+                <Card.Title>{`${match.league.name} ${match.blockName}`}</Card.Title>
                 <Card.Description>
-                  Match starts at:{" "}
-                  {Intl.DateTimeFormat("en-US", {
-                    dateStyle: "medium",
-                    timeStyle: "short",
-                  }).format(new Date(match.startTime))}
+                  {match.match.teams[0].name} vs {match.match.teams[1].name}
                 </Card.Description>
-                <Tag.Root size="sm" w="fit-content">
-                  {match.league.slug}
-                </Tag.Root>
               </Card.Body>
+              <Card.Footer justifyContent="end">
+                <Tag.Root size="sm">
+                  <Icon size="xs" mr={1} asChild>
+                    <CalendarBlankIcon />
+                  </Icon>
+                  <Tag.Label>
+                    {Intl.DateTimeFormat("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      hour: "numeric",
+                      minute: "2-digit",
+                      hour12: true,
+                    }).format(new Date(match.startTime))}
+                  </Tag.Label>
+                </Tag.Root>
+              </Card.Footer>
             </Card.Root>
           </GridItem>
         ))}
