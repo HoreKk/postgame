@@ -93,15 +93,46 @@ function HomeComponent() {
               })
             }
           >
-            {league.toUpperCase()}
+            <Tag.Label>
+              {league
+                .split("_")
+                .map((word) => `${word.charAt(0).toUpperCase()}${word.slice(1)}`)
+                .join(" ")}
+            </Tag.Label>
           </Tag.Root>
         ))}
       </Flex>
-      <Grid templateColumns="repeat(3, minmax(300px, 1fr))" gap={6} mt={4}>
+      <Grid
+        templateColumns={{
+          base: "1fr",
+          md: "repeat(2, minmax(300px, 1fr))",
+          lg: "repeat(3, minmax(300px, 1fr))",
+        }}
+        gap={6}
+        mt={4}
+      >
         {filteredMatches.map((match) => (
           <GridItem key={match.match.id}>
-            <Card.Root overflow="hidden" h="full">
+            <Card.Root
+              overflow="hidden"
+              h="full"
+              shadow="md"
+              _hover={{
+                shadow: "lg",
+                transform: "translateY(-1px)",
+                borderColor: "border.emphasized",
+              }}
+              transition="all 0.2s"
+            >
               <Card.Header alignItems="center" py={12}>
+                <Flex position="absolute" top={4} justifyContent="space-between" w="full" px={4}>
+                  <Tag.Root size="sm">
+                    <Tag.Label>LoL</Tag.Label>
+                  </Tag.Root>
+                  <Tag.Root size="sm">
+                    <Tag.Label>{match.league.name}</Tag.Label>
+                  </Tag.Root>
+                </Flex>
                 <Flex alignItems="center" gap="4">
                   <Image
                     src={match.match.teams[0].image}
