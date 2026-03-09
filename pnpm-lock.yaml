@@ -105,9 +105,6 @@ importers:
       '@postgame/auth':
         specifier: workspace:*
         version: link:../../packages/auth
-      '@postgame/lol-client':
-        specifier: workspace:*
-        version: link:../../packages/lol-client
       '@tanstack/react-devtools':
         specifier: ^0.9.10
         version: 0.9.10(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(csstype@3.2.3)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(solid-js@1.9.11)

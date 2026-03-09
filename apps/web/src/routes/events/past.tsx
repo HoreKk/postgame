@@ -24,33 +24,47 @@ function RouteComponent() {
   return (
     <Box>
       <Heading size="2xl">Past Matches</Heading>
-      <Flex gap="4" mt="4">
-        <Text>Filter by League:</Text>
-        {defaultLeagues.map((league) => (
-          <Tag.Root
-            key={league}
-            cursor="pointer"
-            colorPalette={sortedLeagues.includes(league) ? "primary" : "gray"}
-            onClick={() =>
-              setSortedLeagues((prev) => {
-                if (league === "all") return ["all"];
-                if (prev.includes("all")) return [league];
-                if (prev.includes(league)) {
-                  let prevFiltered = prev.filter((l) => l !== league);
-                  return prevFiltered.length === 0 ? ["all"] : prevFiltered;
-                }
-                return [...prev, league];
-              })
-            }
-          >
-            <Tag.Label>
-              {league
-                .split("_")
-                .map((word) => `${word.charAt(0).toUpperCase()}${word.slice(1)}`)
-                .join(" ")}
-            </Tag.Label>
-          </Tag.Root>
-        ))}
+      <Flex gap={4} mt={4}>
+        <Text fontSize="sm" whiteSpace="nowrap" flexShrink={0}>
+          By League :
+        </Text>
+        <Flex
+          align="center"
+          overflowX="auto"
+          gap={4}
+          css={{
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
+          }}
+          mr="1px"
+        >
+          {defaultLeagues.map((league) => (
+            <Tag.Root
+              key={league}
+              cursor="pointer"
+              colorPalette={sortedLeagues.includes(league) ? "primary" : "gray"}
+              onClick={() =>
+                setSortedLeagues((prev) => {
+                  if (league === "all") return ["all"];
+                  if (prev.includes("all")) return [league];
+                  if (prev.includes(league)) {
+                    let prevFiltered = prev.filter((l) => l !== league);
+                    return prevFiltered.length === 0 ? ["all"] : prevFiltered;
+                  }
+                  return [...prev, league];
+                })
+              }
+            >
+              <Tag.Label>
+                {league
+                  .split("_")
+                  .map((word) => `${word.charAt(0).toUpperCase()}${word.slice(1)}`)
+                  .join(" ")}
+              </Tag.Label>
+            </Tag.Root>
+          ))}
+        </Flex>
       </Flex>
       <Grid
         templateColumns={{

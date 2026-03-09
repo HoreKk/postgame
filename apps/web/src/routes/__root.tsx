@@ -1,9 +1,9 @@
 import type { QueryClient } from "@tanstack/react-query";
 
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
-import { TanStackDevtools } from "@tanstack/react-devtools";
-import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+// import { TanStackDevtools } from "@tanstack/react-devtools";
+// import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import type { orpc } from "@/utils/orpc";
 import { Provider } from "@/components/ui/provider";
@@ -43,11 +43,11 @@ function RootDocument() {
       <body>
         <Provider>
           <Navbar />
-          <Container maxW="container.lg" py={8}>
+          <Container maxW="container.lg" py={6}>
             <Outlet />
           </Container>
-          <TanStackDevtools
-            config={{ position: "bottom-right" }}
+          {/* <TanStackDevtools
+            config={{ position: "bottom-left", hideUntilHover: true }}
             plugins={[
               {
                 name: "Tanstack Router",
@@ -58,7 +58,7 @@ function RootDocument() {
                 render: <ReactQueryDevtools />,
               },
             ]}
-          />
+          /> */}
         </Provider>
         <Scripts />
       </body>
