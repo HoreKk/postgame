@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { client } from "@/utils/orpc";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import EventCard from "@/components/cards/EventCard";
-import { Box, Heading, Flex, Tag, Grid, GridItem, Text } from "@chakra-ui/react";
+import { Box, Heading, Grid, GridItem } from "@chakra-ui/react";
+import { LeagueFilter } from "@/components/LeagueFilter";
 
 export const Route = createFileRoute("/events/upcoming")({
   component: RouteComponent,
@@ -14,44 +15,19 @@ function RouteComponent() {
 
   const defaultLeagues = ["all", ...new Set(events.map((event) => event.league.slug))];
 
-  const [sortedLeagues, setSortedLeagues] = useState(["all"]);
+  const [selectedLeague, setSelectedLeague] = useState("all");
 
-  const filteredMatches = useMemo(() => {
-    if (sortedLeagues.includes("all")) return events;
-    return events.filter((event) => sortedLeagues.includes(event.league.slug));
-  }, [sortedLeagues, events]);
+  const filteredMatches =
+    selectedLeague === "all" ? events : events.filter((e) => e.league.slug === selectedLeague);
 
   return (
     <Box>
       <Heading size="2xl">Upcoming Matches</Heading>
-      <Flex gap="4" mt="4">
-        <Text>Filter by League:</Text>
-        {defaultLeagues.map((league) => (
-          <Tag.Root
-            key={league}
-            cursor="pointer"
-            colorPalette={sortedLeagues.includes(league) ? "primary" : "gray"}
-            onClick={() =>
-              setSortedLeagues((prev) => {
-                if (league === "all") return ["all"];
-                if (prev.includes("all")) return [league];
-                if (prev.includes(league)) {
-                  let prevFiltered = prev.filter((l) => l !== league);
-                  return prevFiltered.length === 0 ? ["all"] : prevFiltered;
-                }
-                return [...prev, league];
-              })
-            }
-          >
-            <Tag.Label>
-              {league
-                .split("_")
-                .map((word) => `${word.charAt(0).toUpperCase()}${word.slice(1)}`)
-                .join(" ")}
-            </Tag.Label>
-          </Tag.Root>
-        ))}
-      </Flex>
+      <LeagueFilter
+        leagues={defaultLeagues}
+        selected={selectedLeague}
+        onChange={setSelectedLeague}
+      />
       <Grid
         templateColumns={{
           base: "1fr",
