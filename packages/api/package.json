@@ -20,6 +20,7 @@
   },
   "scripts": {
     "build": "tsdown",
+    "dev": "tsdown --watch",
     "start": "node dist/index.js"
   },
   "dependencies": {
@@ -27,9 +28,9 @@
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
     "@orpc/zod": "catalog:",
-    "@postgame/lol-client": "workspace:*",
     "@postgame/auth": "workspace:*",
     "@postgame/db": "workspace:*",
+    "@postgame/lol-client": "workspace:*",
     "colorthief": "^3.3.1",
     "dotenv": "catalog:",
     "zod": "catalog:"
