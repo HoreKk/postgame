@@ -1,4 +1,4 @@
-import { Box, Flex, Icon, Image, Status, Tag, Text } from "@chakra-ui/react";
+import { Box, Flex, Icon, Image, Status, Text } from "@chakra-ui/react";
 import { MinusIcon } from "@phosphor-icons/react";
 import type { DetailsEvent, ScheduleEvent } from "@postgame/api/routers/events";
 
