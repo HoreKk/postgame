@@ -8,7 +8,6 @@ import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanst
 import type { orpc } from "@/utils/orpc";
 import { Provider } from "@/components/ui/provider";
 import Navbar from "@/components/sections/Navbar";
-import { Container } from "@chakra-ui/react";
 import "@fontsource-variable/jetbrains-mono/index.css";
 
 export interface RouterAppContext {
@@ -43,9 +42,7 @@ function RootDocument() {
       <body>
         <Provider>
           <Navbar />
-          <Container maxW="container.lg" py={6}>
-            <Outlet />
-          </Container>
+          <Outlet />
           {/* <TanStackDevtools
             config={{ position: "bottom-left", hideUntilHover: true }}
             plugins={[

@@ -9,6 +9,7 @@ import {
   getSchedule,
   getLive,
   getEventDetails,
+  type GetEventDetailsResponses,
 } from "@postgame/lol-client";
 import { getColor } from "colorthief";
 import z from "zod";
@@ -34,6 +35,11 @@ type ScheduleTeam = Team & {
 };
 export type ScheduleEvent = Omit<RawScheduleEvent, "match"> & {
   match: Omit<RawScheduleEvent["match"], "teams"> & { teams: (ScheduleTeam & { color: string })[] };
+};
+
+type RawDetailsEvent = GetEventDetailsResponses[200]["data"]["event"]
+export type DetailsEvent = Omit<RawDetailsEvent, "match"> & {
+  match: Omit<RawDetailsEvent["match"], "teams"> & { teams: (RawDetailsEvent["match"]["teams"][number] & { color: string })[] };
 };
 
 const FALLBACK_COLOR = "#718096";
@@ -154,7 +160,7 @@ export const eventsRouter = {
 
   getEventById: publicProcedure
     .input(z.string())
-    .handler(async ({ input: id, context }): Promise<ScheduleEvent> => {
+    .handler(async ({ input: id, context }): Promise<DetailsEvent> => {
       const { lolClient } = context;
 
       const { data: resultEvent } = await getEventDetails({
@@ -167,7 +173,7 @@ export const eventsRouter = {
 
       if (!resultEvent) throw new Error(`No event found for ID ${id}`);
 
-      const event = resultEvent.data.event as unknown as ScheduleEvent;
+      const event = resultEvent.data.event as unknown as DetailsEvent;
 
       const uniqueImageUrls = [
         ...new Set(

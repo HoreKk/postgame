@@ -11,19 +11,33 @@ export const Route = createFileRoute("/events/$id")({
 });
 
 function RouteComponent() {
-  const { id } = Route.useParams();
   const event = Route.useLoaderData();
+
+  const matchName = `${event.match.teams[0].name} vs ${event.match.teams[1].name}`;
 
   return (
     <Box>
-      <BreadcrumbRoot>
-        <BreadcrumbLink outline="none" asChild>
-          <Link to="/">Home</Link>
-        </BreadcrumbLink>
-        <BreadcrumbCurrentLink>Match {id}</BreadcrumbCurrentLink>
-      </BreadcrumbRoot>
-      <Box mt={6} borderRadius="lg" overflow="hidden">
-        <MatchHero teams={[event.match.teams[0], event.match.teams[1]]} state="completed" />
+      <Box position="relative">
+        <BreadcrumbRoot
+          position="absolute"
+          top={4}
+          left={4}
+          zIndex={1}
+          bg="bg.surface"
+          borderRadius="md"
+          px={3}
+          py={1}
+        >
+          <BreadcrumbLink outline="none" asChild>
+            <Link to="/">Home</Link>
+          </BreadcrumbLink>
+          <BreadcrumbCurrentLink>{matchName}</BreadcrumbCurrentLink>
+        </BreadcrumbRoot>
+        <MatchHero
+          teams={[event.match.teams[0], event.match.teams[1]]}
+          state="completed"
+          size="lg"
+        />
       </Box>
     </Box>
   );

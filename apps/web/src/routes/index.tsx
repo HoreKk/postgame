@@ -12,6 +12,7 @@ import {
 import EventCard from "@/components/cards/EventCard";
 import { client } from "@/utils/orpc";
 import { ArrowRightIcon } from "@phosphor-icons/react";
+import BaseContainer from "@/components/layouts/BaseContainer";
 
 export const Route = createFileRoute("/")({
   component: HomeComponent,
@@ -29,7 +30,7 @@ function HomeComponent() {
   const { upcomingEvents, pastEvents } = Route.useLoaderData();
 
   return (
-    <Box>
+    <BaseContainer>
       <Flex flexDir="column" gap={10}>
         <Box>
           <Flex justify="space-between" align="end">
@@ -92,6 +93,6 @@ function HomeComponent() {
           </Grid>
         </Box>
       </Flex>
-    </Box>
+    </BaseContainer>
   );
 }

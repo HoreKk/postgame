@@ -9,6 +9,7 @@ interface EventCardProps {
 }
 
 export default function EventCard({ event }: EventCardProps) {
+  const isUnstarted = event.state === "unstarted";
   return (
     <Link to="/events/$id" params={{ id: event.match.id }} style={{ textDecoration: "none" }}>
       <Card.Root
@@ -23,10 +24,7 @@ export default function EventCard({ event }: EventCardProps) {
         }}
         transition="all 0.2s"
       >
-        <MatchHero
-          teams={[event.match.teams[0], event.match.teams[1]]}
-          state={event.state as "unstarted" | "inProgress" | "completed"}
-        />
+        <MatchHero teams={[event.match.teams[0], event.match.teams[1]]} state={event.state} />
         <Card.Body
           gap={2}
           borderTop="1px solid"
@@ -38,24 +36,23 @@ export default function EventCard({ event }: EventCardProps) {
             {event.match.teams[0].name} vs {event.match.teams[1].name}
           </Card.Description>
         </Card.Body>
-        {event.state === "unstarted" && (
-          <Card.Footer justifyContent="end">
-            <Tag.Root size="sm">
-              <Icon size="xs" mr={1} asChild>
-                <CalendarBlankIcon />
-              </Icon>
-              <Tag.Label>
-                {Intl.DateTimeFormat("en-US", {
-                  month: "long",
-                  day: "numeric",
-                  hour: "numeric",
-                  minute: "2-digit",
-                  hour12: true,
-                }).format(new Date(event.startTime))}
-              </Tag.Label>
-            </Tag.Root>
-          </Card.Footer>
-        )}
+        <Card.Footer justifyContent="end">
+          <Tag.Root size="sm">
+            <Icon size="xs" mr={1} asChild>
+              <CalendarBlankIcon />
+            </Icon>
+            <Tag.Label>
+              {Intl.DateTimeFormat("en-US", {
+                month: "long",
+                day: "numeric",
+                year: !isUnstarted ? "numeric" : undefined,
+                hour: isUnstarted ? "numeric" : undefined,
+                minute: isUnstarted ? "2-digit" : undefined,
+                hour12: true,
+              }).format(new Date(event.startTime))}
+            </Tag.Label>
+          </Tag.Root>
+        </Card.Footer>
       </Card.Root>
     </Link>
   );

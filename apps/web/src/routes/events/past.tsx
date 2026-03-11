@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import EventCard from "@/components/cards/EventCard";
-import { Box, Heading, Grid, GridItem } from "@chakra-ui/react";
+import { Heading, Grid, GridItem } from "@chakra-ui/react";
 import { client } from "@/utils/orpc";
 import { LeagueFilter } from "@/components/LeagueFilter";
+import BaseContainer from "@/components/layouts/BaseContainer";
 
 export const Route = createFileRoute("/events/past")({
   component: RouteComponent,
@@ -21,7 +22,7 @@ function RouteComponent() {
     selectedLeague === "all" ? events : events.filter((e) => e.league.slug === selectedLeague);
 
   return (
-    <Box>
+    <BaseContainer>
       <Heading size="2xl">Past Matches</Heading>
       <LeagueFilter
         leagues={defaultLeagues}
@@ -43,6 +44,6 @@ function RouteComponent() {
           </GridItem>
         ))}
       </Grid>
-    </Box>
+    </BaseContainer>
   );
 }
