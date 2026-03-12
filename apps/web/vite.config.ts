@@ -6,6 +6,13 @@ import { nitro } from "nitro/vite";
 export default defineConfig({
   plugins: [tanstackStart(), nitro(), viteReact()],
   resolve: { tsconfigPaths: true },
+  build: {
+    rolldownOptions: {
+      experimental: {
+        lazyBarrel: true,
+      },
+    },
+  },
   server: {
     port: Number(process.env.PORT) || 3000,
     allowedHosts: true,
