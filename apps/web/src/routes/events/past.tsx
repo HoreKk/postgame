@@ -85,7 +85,6 @@ function RouteComponent() {
         page={page}
         onPageChange={setPage}
       />
-      {isLoading && <div>Loading...</div>}
     </BaseContainer>
   );
 }
