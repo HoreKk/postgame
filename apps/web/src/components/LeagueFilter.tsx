@@ -8,7 +8,7 @@ interface LeagueFilterProps {
 
 export function LeagueFilter({ leagues, selected, onChange }: LeagueFilterProps) {
   return (
-    <Flex gap={4} mt={4}>
+    <Flex gap={4}>
       <Text fontSize="sm" whiteSpace="nowrap" flexShrink={0}>
         By League :
       </Text>

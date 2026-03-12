@@ -51,13 +51,17 @@ export const eventsRouter = {
     .input(
       z.object({
         type: z.enum(["upcoming", "past"]),
-        limit: z.number().optional(),
+        page: z.number().int().min(1).default(1),
+        pageSize: z.number().int().min(1).max(50).default(9),
       }),
     )
     .handler(
-      async ({ input, context }): Promise<{ leagues: League[]; events: ScheduleEvent[] }> => {
+      async ({
+        input,
+        context,
+      }): Promise<{ leagues: League[]; events: ScheduleEvent[]; total: number }> => {
         const { lolClient } = context;
-        const { type, limit } = input;
+        const { type, page, pageSize } = input;
 
         const { data: resultLeagues } = await getLeagues({
           client: lolClient,
@@ -119,9 +123,9 @@ export const eventsRouter = {
             .sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());
         }
 
-        if (limit) {
-          filteredEvents = filteredEvents.slice(0, limit);
-        }
+        const total = filteredEvents.length;
+        const offset = (page - 1) * pageSize;
+        filteredEvents = filteredEvents.slice(offset, offset + pageSize);
 
         const uniqueImageUrls = [
           ...new Set(
@@ -156,7 +160,7 @@ export const eventsRouter = {
           },
         }));
 
-        return { leagues, events: result };
+        return { leagues: curatedLeagues, events: result, total };
       },
     ),
 

@@ -18,8 +18,8 @@ export const Route = createFileRoute("/")({
   component: HomeComponent,
   loader: async () => {
     const [{ events: upcomingEvents }, { events: pastEvents }] = await Promise.all([
-      client.events.getEvents({ type: "upcoming", limit: 3 }),
-      client.events.getEvents({ type: "past", limit: 3 }),
+      client.events.getEvents({ type: "upcoming", pageSize: 3 }),
+      client.events.getEvents({ type: "past", pageSize: 3 }),
     ]);
 
     return { upcomingEvents, pastEvents };
