@@ -1,9 +1,9 @@
-import { defineConfig } from 'tsdown'
+import { defineConfig } from "tsdown";
 
 export default defineConfig({
-  entry: ['src/client/index.ts', 'src/client/client/index.ts'],
-  format: 'esm',
-  outExtensions: () => ({ js: '.js' }),
+  entry: ["src/client/index.ts", "src/client/client/index.ts"],
+  format: "esm",
+  outExtensions: () => ({ js: ".js" }),
   dts: true,
   clean: true,
-})
+});

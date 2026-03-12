@@ -37,9 +37,11 @@ export type ScheduleEvent = Omit<RawScheduleEvent, "match"> & {
   match: Omit<RawScheduleEvent["match"], "teams"> & { teams: (ScheduleTeam & { color: string })[] };
 };
 
-type RawDetailsEvent = GetEventDetailsResponses[200]["data"]["event"]
+type RawDetailsEvent = GetEventDetailsResponses[200]["data"]["event"];
 export type DetailsEvent = Omit<RawDetailsEvent, "match"> & {
-  match: Omit<RawDetailsEvent["match"], "teams"> & { teams: (RawDetailsEvent["match"]["teams"][number] & { color: string })[] };
+  match: Omit<RawDetailsEvent["match"], "teams"> & {
+    teams: (RawDetailsEvent["match"]["teams"][number] & { color: string })[];
+  };
 };
 
 const FALLBACK_COLOR = "#718096";
