@@ -5,7 +5,7 @@ if (!process.env.DATABASE_URL) {
   const path = await import("path");
   const { fileURLToPath } = await import("url");
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
-  dotenv.config({ path: path.resolve(__dirname, "../../apps/web/.env") });
+  dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 }
 
 export default defineConfig({
