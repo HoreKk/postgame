@@ -9,6 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as ListsRouteImport } from './routes/lists'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EventsUpcomingRouteImport } from './routes/events/upcoming'
@@ -17,6 +19,16 @@ import { Route as EventsIdRouteImport } from './routes/events/$id'
 import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ListsRoute = ListsRouteImport.update({
   id: '/lists',
   path: '/lists',
@@ -56,6 +68,8 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/lists': typeof ListsRoute
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
   '/events/$id': typeof EventsIdRoute
   '/events/past': typeof EventsPastRoute
   '/events/upcoming': typeof EventsUpcomingRoute
@@ -65,6 +79,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/lists': typeof ListsRoute
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
   '/events/$id': typeof EventsIdRoute
   '/events/past': typeof EventsPastRoute
   '/events/upcoming': typeof EventsUpcomingRoute
@@ -75,6 +91,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/lists': typeof ListsRoute
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
   '/events/$id': typeof EventsIdRoute
   '/events/past': typeof EventsPastRoute
   '/events/upcoming': typeof EventsUpcomingRoute
@@ -86,6 +104,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/lists'
+    | '/login'
+    | '/signup'
     | '/events/$id'
     | '/events/past'
     | '/events/upcoming'
@@ -95,6 +115,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/lists'
+    | '/login'
+    | '/signup'
     | '/events/$id'
     | '/events/past'
     | '/events/upcoming'
@@ -104,6 +126,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/lists'
+    | '/login'
+    | '/signup'
     | '/events/$id'
     | '/events/past'
     | '/events/upcoming'
@@ -114,6 +138,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ListsRoute: typeof ListsRoute
+  LoginRoute: typeof LoginRoute
+  SignupRoute: typeof SignupRoute
   EventsIdRoute: typeof EventsIdRoute
   EventsPastRoute: typeof EventsPastRoute
   EventsUpcomingRoute: typeof EventsUpcomingRoute
@@ -123,6 +149,20 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/lists': {
       id: '/lists'
       path: '/lists'
@@ -178,6 +218,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ListsRoute: ListsRoute,
+  LoginRoute: LoginRoute,
+  SignupRoute: SignupRoute,
   EventsIdRoute: EventsIdRoute,
   EventsPastRoute: EventsPastRoute,
   EventsUpcomingRoute: EventsUpcomingRoute,
