@@ -43,6 +43,7 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 });
 
 function RootDocument() {
+  const { session } = Route.useRouteContext();
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -50,7 +51,7 @@ function RootDocument() {
       </head>
       <body suppressHydrationWarning>
         <Provider>
-          <Navbar />
+          <Navbar session={session} />
           <Outlet />
         </Provider>
         <Scripts />

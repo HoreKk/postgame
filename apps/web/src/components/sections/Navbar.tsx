@@ -1,4 +1,4 @@
-import { authClient } from "@/lib/auth-client";
+import { authClient, type Session } from "@/lib/auth-client";
 import {
   Box,
   Container,
@@ -9,10 +9,9 @@ import {
   Kbd,
   Menu,
   Portal,
-  Skeleton,
 } from "@chakra-ui/react";
 import { FlagBannerFoldIcon, SignInIcon, SignOutIcon, UserCircleIcon } from "@phosphor-icons/react";
-import { Link, useLocation, useNavigate, type LinkProps } from "@tanstack/react-router";
+import { Link, useLocation, useNavigate, useRouter, type LinkProps } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 type NavLink = {
@@ -22,10 +21,14 @@ type NavLink = {
   label: string;
 };
 
-const Navbar = () => {
+type NavbarProps = {
+  session: Session | null;
+};
+
+const Navbar = ({ session }: NavbarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { data: session, isPending: isSessionPending, isRefetching } = authClient.useSession();
+  const router = useRouter();
 
   const listRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLSpanElement | null)[]>([]);
@@ -33,6 +36,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     await authClient.signOut();
+    router.invalidate();
   };
 
   const NAV_LINKS: NavLink[] = [
@@ -128,16 +132,14 @@ const Navbar = () => {
             <Box>
               <Menu.Root>
                 <Menu.Trigger rounded="full" focusRing="outside" asChild>
-                  <Skeleton loading={isSessionPending || isRefetching} rounded="full">
-                    <IconButton
-                      borderRadius="full"
-                      size="2xs"
-                      variant="surface"
-                      onClick={() => !session && navigate({ to: "/login" })}
-                    >
-                      {session ? <UserCircleIcon /> : <SignInIcon />}
-                    </IconButton>
-                  </Skeleton>
+                  <IconButton
+                    borderRadius="full"
+                    size="2xs"
+                    variant="surface"
+                    onClick={() => !session && navigate({ to: "/login" })}
+                  >
+                    {session ? <UserCircleIcon /> : <SignInIcon />}
+                  </IconButton>
                 </Menu.Trigger>
                 {session && (
                   <Portal>
