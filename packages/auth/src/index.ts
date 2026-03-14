@@ -1,5 +1,5 @@
 import { db } from "@postgame/db";
-import * as schema from "@postgame/db/schema/auth";
+import * as schema from "@postgame/db/schema";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
