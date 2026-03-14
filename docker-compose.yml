@@ -11,7 +11,7 @@ services:
     ports:
       - "5434:5432"
     volumes:
-      - postgame_postgres_data:/var/lib/postgresql
+      - postgres_data:/var/lib/postgresql
 
 volumes:
-  postgame_postgres_data:
+  postgres_data:
