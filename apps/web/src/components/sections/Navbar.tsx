@@ -10,7 +10,13 @@ import {
   Menu,
   Portal,
 } from "@chakra-ui/react";
-import { FlagBannerFoldIcon, SignInIcon, SignOutIcon, UserCircleIcon } from "@phosphor-icons/react";
+import {
+  FlagBannerFoldIcon,
+  IdentificationCardIcon,
+  SignInIcon,
+  SignOutIcon,
+  UserCircleIcon,
+} from "@phosphor-icons/react";
 import { Link, useLocation, useNavigate, useRouter, type LinkProps } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -25,6 +31,11 @@ type NavbarProps = {
   session: Session | null;
 };
 
+const NAV_LINKS: NavLink[] = [
+  { value: "matches", to: "/", startWith: "/events", label: "Matches" },
+  { value: "lists", to: "/lists", label: "Lists" },
+];
+
 const Navbar = ({ session }: NavbarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -32,17 +43,12 @@ const Navbar = ({ session }: NavbarProps) => {
 
   const listRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const [indicator, setIndicator] = useState({ left: 0, width: 0 });
+  const [indicator, setIndicator] = useState<{ left: number; width: number } | null>(null);
 
   const handleLogout = async () => {
     await authClient.signOut();
     router.invalidate();
   };
-
-  const NAV_LINKS: NavLink[] = [
-    { value: "matches", to: "/", startWith: "/events", label: "Matches" },
-    { value: "lists", to: "/lists", label: "Lists" },
-  ];
 
   const activeIndex = useMemo(
     () =>
@@ -55,6 +61,11 @@ const Navbar = ({ session }: NavbarProps) => {
   );
 
   useEffect(() => {
+    if (activeIndex === -1) {
+      setIndicator(null);
+      return;
+    }
+
     const update = () => {
       const el = itemRefs.current[activeIndex];
       const list = listRef.current;
@@ -115,28 +126,32 @@ const Navbar = ({ session }: NavbarProps) => {
                   </Link>
                 );
               })}
-              <Box
-                position="absolute"
-                bottom={0}
-                h="2px"
-                bgColor="primary.solid"
-                borderRadius="sm"
-                transition="left 0.25s ease, width 0.25s ease, opacity 0.2s"
-                style={{
-                  left: indicator.left,
-                  width: indicator.width,
-                  opacity: indicator.width === 0 ? 0 : 1,
-                }}
-              />
+              {indicator && (
+                <Box
+                  position="absolute"
+                  bottom={0}
+                  h="2px"
+                  bgColor="primary.solid"
+                  borderRadius="sm"
+                  transition="left 0.25s ease, width 0.25s ease, opacity 0.2s"
+                  style={{
+                    left: indicator.left,
+                    width: indicator.width,
+                    opacity: indicator.width === 0 ? 0 : 1,
+                  }}
+                />
+              )}
             </Flex>
             <Box>
               <Menu.Root>
-                <Menu.Trigger rounded="full" focusRing="outside" asChild>
+                <Menu.Trigger rounded="full" asChild>
                   <IconButton
                     borderRadius="full"
                     size="2xs"
                     variant="surface"
                     onClick={() => !session && navigate({ to: "/login" })}
+                    _focus={{ outline: "none!important" }}
+                    shadowColor={activeIndex === -1 ? "primary.focusRing" : "transparent"}
                   >
                     {session ? <UserCircleIcon /> : <SignInIcon />}
                   </IconButton>
@@ -145,6 +160,13 @@ const Navbar = ({ session }: NavbarProps) => {
                   <Portal>
                     <Menu.Positioner>
                       <Menu.Content>
+                        <Menu.Item value="profile" onClick={() => navigate({ to: "/profile" })}>
+                          Profile
+                          <Icon asChild>
+                            <IdentificationCardIcon />
+                          </Icon>
+                        </Menu.Item>
+                        <Menu.Separator />
                         <Menu.Item value="logout" onClick={handleLogout}>
                           Logout
                           <Icon color="fg.error" asChild>
