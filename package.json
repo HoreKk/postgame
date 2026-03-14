@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
+    "build:loose": "turbo build --env-mode=loose",
     "serve:web": "node apps/web/.output/server/index.mjs",
     "check-types": "turbo check-types",
     "dev:native": "turbo -F native dev",
