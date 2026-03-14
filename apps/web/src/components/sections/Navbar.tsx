@@ -10,13 +10,7 @@ import {
   Menu,
   Portal,
 } from "@chakra-ui/react";
-import {
-  FlagBannerFoldIcon,
-  IdentificationCardIcon,
-  SignInIcon,
-  SignOutIcon,
-  UserCircleIcon,
-} from "@phosphor-icons/react";
+import { FlagBannerFoldIcon, SignInIcon, SignOutIcon, UserCircleIcon } from "@phosphor-icons/react";
 import { Link, useLocation, useNavigate, useRouter, type LinkProps } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -162,16 +156,13 @@ const Navbar = ({ session }: NavbarProps) => {
                       <Menu.Content>
                         <Menu.Item value="profile" onClick={() => navigate({ to: "/profile" })}>
                           Profile
-                          <Icon asChild>
-                            <IdentificationCardIcon />
-                          </Icon>
                         </Menu.Item>
                         <Menu.Separator />
                         <Menu.Item value="logout" onClick={handleLogout}>
-                          Logout
                           <Icon color="fg.error" asChild>
                             <SignOutIcon />
                           </Icon>
+                          Logout
                         </Menu.Item>
                       </Menu.Content>
                     </Menu.Positioner>

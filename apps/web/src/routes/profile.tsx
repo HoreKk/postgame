@@ -115,7 +115,7 @@ function ProfilePage() {
   return (
     <BaseContainer>
       <Flex align="center" gap={2}>
-        <Icon size="2xl" color="primary.solid">
+        <Icon size="2xl" color="primary.focusRing">
           <UserSquareIcon weight="fill" />
         </Icon>
         <Heading size="2xl">Profile</Heading>
