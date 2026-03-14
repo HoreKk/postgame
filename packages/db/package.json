@@ -28,14 +28,14 @@
   },
   "dependencies": {
     "dotenv": "catalog:",
-    "drizzle-orm": "^0.45.1",
+    "drizzle-orm": "1.0.0-beta.17-67b1795",
     "pg": "^8.17.1",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@postgame/config": "workspace:*",
     "@types/pg": "^8.16.0",
-    "drizzle-kit": "^0.31.8",
+    "drizzle-kit": "1.0.0-beta.17-67b1795",
     "tsdown": "catalog:",
     "typescript": "catalog:"
   }
