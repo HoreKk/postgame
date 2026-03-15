@@ -29,8 +29,7 @@ export const series = pgTable(
   },
   (table) => [
     unique("series_game_type_external_id_unique").on(table.gameType, table.externalId),
-    // externalId is the primary lookup key — dedicated index for high-frequency queries
-    index("series_external_id_idx").using("btree", table.externalId.asc().nullsLast()),
+    index("series_game_type_idx").using("btree", table.gameType.asc().nullsLast()),
   ],
 );
 

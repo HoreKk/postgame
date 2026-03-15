@@ -1,9 +1,9 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "7f406e15-b8c3-468f-9c76-73df2bd4d8fc",
+  "id": "4ad6fc61-de43-453d-baa9-2b76e6689631",
   "prevIds": [
-    "3fe124f3-34c2-4b05-be84-e2fb10a7948e"
+    "e0ccb00f-bc95-4e15-83a8-05be95173204"
   ],
   "ddl": [
     {
@@ -860,7 +860,7 @@
       "nameExplicit": true,
       "columns": [
         {
-          "value": "external_id",
+          "value": "game_type",
           "isExpression": false,
           "asc": true,
           "nullsFirst": false,
@@ -872,7 +872,7 @@
       "with": "",
       "method": "btree",
       "concurrently": false,
-      "name": "series_external_id_idx",
+      "name": "series_game_type_idx",
       "entityType": "indexes",
       "schema": "public",
       "table": "series"
@@ -1156,7 +1156,5 @@
       "table": "tag"
     }
   ],
-  "renames": [
-    "public.series.series_game_type_idx->public.series.series_external_id_idx"
-  ]
+  "renames": []
 }
