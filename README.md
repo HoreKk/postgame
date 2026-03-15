@@ -78,7 +78,7 @@ cp apps/web/.env.example apps/web/.env
 
 Required variables: `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `LOL_API_KEY`
 
-> The `LOL_API_KEY` is the API key for `https://esports-api.lolesports.com` — use `0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z` (publicly known key).
+> The `LOL_API_KEY` is the API key for `https://esports-api.lolesports.com`.
 
 ### Database
 
