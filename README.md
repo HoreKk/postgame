@@ -1,72 +1,109 @@
-# postgame
+# Postgame
 
-This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines React, TanStack Start, Self, ORPC, and more.
+**Postgame** is a Letterboxd-style platform for esports — track, review, and discover competitive matches. The MVP focuses on **League of Legends** using the unofficial LoL Esports API.
 
-## Features
+---
 
-- **TypeScript** - For type safety and improved developer experience
-- **TanStack Start** - SSR framework with TanStack Router
-- **TailwindCSS** - Utility-first CSS for rapid UI development
-- **shadcn/ui** - Reusable UI components
-- **oRPC** - End-to-end type-safe APIs with OpenAPI integration
-- **Drizzle** - TypeScript-first ORM
-- **PostgreSQL** - Database engine
-- **Authentication** - Better-Auth
-- **Turborepo** - Optimized monorepo build system
-- **Oxlint** - Oxlint + Oxfmt (linting & formatting)
+## Architecture
+
+Turborepo monorepo with a single fullstack app and shared packages.
+
+```
+postgame/
+├── apps/
+│   └── web/              # React 19 + TanStack Start (SSR) + Chakra UI
+└── packages/
+    ├── lol-client/       # Auto-generated LoL Esports API client (hey-api)
+    ├── api/              # oRPC procedures (business logic, calls lol-client)
+    ├── auth/             # Better-Auth configuration
+    ├── db/               # Drizzle ORM schema + PostgreSQL
+    └── config/           # Shared config
+```
+
+### `packages/lol-client`
+
+Fully typed client generated from the [unofficial LoL Esports OpenAPI spec](https://github.com/vickz84259/lolesports-api-docs) using **[hey-api](https://heyapi.dev/)** (`@hey-api/openapi-ts`).
+
+Regenerate the client:
+
+```bash
+cd packages/lol-client
+pnpm run generate   # fetches OpenAPI YAML and regenerates src/client/
+```
+
+Outputs: typed SDK functions, TanStack Query hooks, JSON schemas, and response transformers — all in `src/client/`.
+
+### `packages/api`
+
+oRPC router that exposes type-safe procedures to the web app. Consumes `lol-client` to fetch leagues, schedules, events, and standings. Extracts dominant team colors from images via `colorthief`.
+
+### `apps/web`
+
+TanStack Start (Vite + Nitro SSR) app. Uses TanStack Router (file-based), TanStack Query, and connects to the API layer via oRPC client.
+
+---
+
+## Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | TanStack Start + Nitro |
+| UI | React 19 + Chakra UI |
+| Routing | TanStack Router (file-based) |
+| Data fetching | TanStack Query + oRPC |
+| API | oRPC (end-to-end type-safe RPC) |
+| Auth | Better-Auth (email/password) |
+| Database | PostgreSQL + Drizzle ORM |
+| LoL API client | hey-api (OpenAPI → TypeScript) |
+| Monorepo | Turborepo + pnpm |
+| Linting | Oxlint + Oxfmt |
+
+---
 
 ## Getting Started
 
-First, install the dependencies:
+**Prerequisites:** Node.js, pnpm, Docker (for local PostgreSQL)
 
 ```bash
 pnpm install
 ```
 
-## Database Setup
+### Environment
 
-This project uses PostgreSQL with Drizzle ORM.
-
-1. Make sure you have a PostgreSQL database set up.
-2. Update your `apps/web/.env` file with your PostgreSQL connection details.
-
-3. Apply the schema to your database:
+Copy and fill in the env file:
 
 ```bash
-pnpm run db:push
+cp apps/web/.env.example apps/web/.env
 ```
 
-Then, run the development server:
+Required variables: `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `LOL_API_KEY`
+
+> The `LOL_API_KEY` is the API key for `https://esports-api.lolesports.com`.
+
+### Database
 
 ```bash
-pnpm run dev
+pnpm run db:start   # start PostgreSQL via Docker
+pnpm run db:push    # apply schema
 ```
 
-Open [http://localhost:3001](http://localhost:3001) in your browser to see the fullstack application.
+### Dev server
 
-## Git Hooks and Formatting
-
-- Format and lint fix: `pnpm run check`
-
-## Project Structure
-
-```
-postgame/
-├── apps/
-│   └── web/         # Fullstack application (React + TanStack Start)
-├── packages/
-│   ├── api/         # API layer / business logic
-│   ├── auth/        # Authentication configuration & logic
-│   └── db/          # Database schema & queries
+```bash
+pnpm run dev        # starts web app on http://localhost:3000
 ```
 
-## Available Scripts
+---
 
-- `pnpm run dev`: Start all applications in development mode
-- `pnpm run build`: Build all applications
-- `pnpm run check-types`: Check TypeScript types across all apps
-- `pnpm run db:push`: Push schema changes to database
-- `pnpm run db:generate`: Generate database client/types
-- `pnpm run db:migrate`: Run database migrations
-- `pnpm run db:studio`: Open database studio UI
-- `pnpm run check`: Run Oxlint and Oxfmt
+## Scripts
+
+| Command | Description |
+|---|---|
+| `pnpm run dev` | Start dev server |
+| `pnpm run build` | Build all packages and apps |
+| `pnpm run check-types` | TypeScript type check |
+| `pnpm run check` | Lint + format (Oxlint/Oxfmt) |
+| `pnpm run db:start` | Start Docker PostgreSQL |
+| `pnpm run db:push` | Push Drizzle schema to DB |
+| `pnpm run db:studio` | Open Drizzle Studio |
+| `pnpm run db:generate` | Generate Drizzle types |
