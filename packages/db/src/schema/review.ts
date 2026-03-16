@@ -30,6 +30,7 @@ export const series = pgTable(
   (table) => [
     unique("series_game_type_external_id_unique").on(table.gameType, table.externalId),
     index("series_game_type_idx").using("btree", table.gameType.asc().nullsLast()),
+    index("series_external_id_idx").using("btree", table.externalId.asc().nullsLast()),
   ],
 );
 
